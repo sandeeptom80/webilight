@@ -1,0 +1,41 @@
+node{
+
+ stage("Git Checkout"){
+
+   git branch: "jenkins_test", url: 'https://github.com/'
+
+  }
+ 
+ stage ("Install node module"){
+  
+   sh "npm run install"
+   
+   }
+ 
+ stage ("build"){
+
+   sh "npm run build"
+  
+  }
+ stage ("Build Docker Image"){
+  
+   sh "docker build -t <url of Registry>/imagename:<version> ."
+  
+  }
+
+ stage('Push Docker Image'){
+        withCredentials(details of repo) {
+          sh "awsecr get-login-password --<region> | docker login --username AWS --password-stdin <url of Registry>"
+        }
+        sh 'docker push <url of Registry>/imagename:<version>'
+     }
+ 
+ stage (" Deploy docker image in servers"){
+         
+		 sh 'docker run --name containerName image: ImageName -p <8080>:<8080>'
+
+  }
+
+ }
+  
+}  

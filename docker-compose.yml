@@ -1,0 +1,13 @@
+version: 'x'
+services:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: <>
+    ports:
+      - '3000:3000'
+    environment:
+     - HOST=0.0.0.0
+    command: npm run start
+networks:
+   driver: bridge
